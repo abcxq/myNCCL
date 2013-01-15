@@ -18,7 +18,7 @@ int check_right(int x, int y)
 			nx=x;
 			ny=y+i;
 
-			if ( COL <ny)    //ny is out of board 
+			if ( ny >= COL )    //ny is out of board 
 				return 0;
 
 			if (temp == chessboard[nx][ny])
@@ -53,7 +53,7 @@ int check_down(x,y)
                         nx=x+i;
                         ny=y;
 
-                        if ( ROW < nx)    //nx is out of board 
+                        if ( nx >= ROW)    //nx is out of board 
                                 return 0;
 
                         if (temp == chessboard[nx][ny])
@@ -88,7 +88,7 @@ int check_down_right(x,y)
                         nx=x+i;
                         ny=y+i;
 
-                        if ( ROW < nx || COL < ny )    //nx,ny is out of board 
+                        if ( nx >= ROW || ny >=COL )    //nx,ny is out of board 
                                 return 0;
 
                         if (temp == chessboard[nx][ny])
@@ -119,10 +119,10 @@ int check_down_left(x,y)
                 {
                         int nx,ny; //next position
 
-                        nx=x-i;
-                        ny=y+i;
+                        nx=x+i;
+                        ny=y-i;
 
-                        if ( 0  > nx || 0  > ny )    //nx,ny is out of board 
+                        if ( nx >= ROW || ny < 0 )    //nx,ny is out of board 
                                 return 0;
 
                         if (temp == chessboard[nx][ny])

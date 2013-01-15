@@ -276,7 +276,6 @@ int check_level(int x, int y, int player)
 				return w6;
 		}
 	}
-	return;
 }
 		
 	

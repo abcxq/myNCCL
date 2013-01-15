@@ -52,7 +52,9 @@ void  put (int x,int y,int who)
 /* get user input */
 void get(int *x, int *y)
 {
-	scanf("%d %d",x, y);
+	int *z;
+	scanf("%d %d",x,y);
+	//scanf("step %d : %d %d\n",z,x,y);
 	return ;
 }
 
