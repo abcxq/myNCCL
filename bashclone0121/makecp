@@ -1,0 +1,16 @@
+INCDIR=inc
+OBJDIR=obj
+
+BIN=mycp/mycp
+
+$(BIN):$(OBJDIR)/mycp.o  $(OBJDIR)/mycp_main.o  
+	gcc -Wall  -o $@ $^  
+
+$(OBJDIR)/mycp.o:mycp/mycp.c inc/shell.h
+	gcc -Wall  -I$(INCDIR)  -c $< -o $@
+
+$(OBJDIR)/mycp_main.o:mycp/mycp_main.c inc/shell.h
+	gcc -Wall  -I$(INCDIR)  -c $< -o $@
+
+clean:
+	rm -f $(BINDIR)/* $(OBJDIR)/*
