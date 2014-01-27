@@ -49,12 +49,13 @@ int do_cmd(int argc, char ** argv)
 			pf(argc,argv);
 			break;
 		}
-		else
-		{
-			printf(" command not found!\n");
-			break;
-		}
 	}
+
+	if ( i == sizeof(op)/sizeof(op[0]))
+	{
+		printf(" command not found!\n");
+	}
+
 	return 0;
 }
 

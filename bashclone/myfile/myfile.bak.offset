@@ -1,0 +1,56 @@
+#include "shell.h"
+
+int  myfile(int argc,char *argv[])
+{
+
+	FILE *fp;
+	Elf32_Ehdr * p;
+	char buf[1024];
+	
+	int i;
+	char  magic;
+	
+	if(argc != 2) /* 检查参数个数 */
+        {
+                printf("wrong command\n");
+                return -1;
+        }
+	
+	fp = fopen( argv[1],"rb");
+
+	if ( NULL  == fp )
+	{
+		printf(" open file error\n");
+		return -1 ;
+	}
+	
+	fread( buf,sizeof(Elf32_Ehdr),1,fp);
+	printf ( "offset  %d\n",&(( (Elf32_Ehdr *)1)->e_entry   ));
+/*	printf("magic  ");
+	for ( i = 0; i < 16 ;i++)
+	{
+		
+		printf("%x ",buf[i]);
+	}
+
+	printf("\n");
+	for ( j = 0; j<sizeof(op)/sizeof(op[0]);i++)
+        {
+                if ( strcmp(argv[0],op[i].name) == 0)
+                {
+	fread(&magic,sizeof( char ), 1,fp);
+
+	switch( magic )
+	{
+		case 1: printf("ELF 32-bit LSB relocatable\n");break;
+		case 2: printf("ELF 32-bit LSB executable\n");break;
+		case 3: printf("ELF 32-bit LSB Shared object\n");break;
+		case 4: printf("ELF 32-bit LSB Core file\n");break;
+		default:  printf("No file type\n");
+	}
+ */
+	fclose(fp);
+	return 0;
+
+}
+		

@@ -1,0 +1,16 @@
+INCDIR=inc
+OBJDIR=obj
+
+BIN=math/math
+
+$(BIN):$(OBJDIR)/math.o  $(OBJDIR)/math_main.o $(OBJDIR)/myfile.o  $(OBJDIR)/mycp.o -lm  
+	gcc -Wall  -o $@ $^  
+
+$(OBJDIR)/math.o:math/math.c inc/shell.h -lm 
+	gcc -Wall  -I$(INCDIR)  -c $< -o $@
+
+$(OBJDIR)/math_main.o:math/math_main.c inc/shell.h
+	gcc -Wall  -I$(INCDIR)  -c $< -o $@
+
+clean:
+	rm -f $(BINDIR)/* $(OBJDIR)/*
