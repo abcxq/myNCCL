@@ -3,7 +3,7 @@ OBJDIR=obj
 
 BIN=./mybash
 
-$(BIN):$(OBJDIR)/mycp.o  $(OBJDIR)/shell.o $(OBJDIR)/main.o  $(OBJDIR)/myfile.o $(OBJDIR)/math.o -lm
+$(BIN):$(OBJDIR)/mycp.o  $(OBJDIR)/shell.o $(OBJDIR)/main.o  $(OBJDIR)/myfile.o $(OBJDIR)/math.o $(OBJDIR)/sed.o -lm
 	gcc -Wall  -o $@ $^  
 
 

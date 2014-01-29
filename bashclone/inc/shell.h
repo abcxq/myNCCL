@@ -11,10 +11,8 @@
 int mycp(int argc,char *argv[]);
 int myfile(int argc,char *argv[]);
 double math(int argc,char *argv[]);
+int sed(int argc,char *argv[]);
 
-/*int file_main(int argc,char *argv[]);
-int cat_main(int argc,char *argv[]);
-int readelf_main(int argc,char *argv[]);*/
 
 static struct operation
 {
@@ -24,8 +22,8 @@ static struct operation
 {
         { "mycp",mycp},
         { "myfile",myfile},
-        { "math",math}
-//      { "readelf",readelf}
+        { "math",math},
+        { "sed",sed}
 };
 
 
