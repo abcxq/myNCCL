@@ -7,11 +7,16 @@
 #include <string.h>
 #include <elf.h>
 #include <math.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 
 int mycp(int argc,char *argv[]);
 int myfile(int argc,char *argv[]);
 double math(int argc,char *argv[]);
 int sed(int argc,char *argv[]);
+int myls(int argc,char *argv[]);
 
 
 static struct operation
@@ -23,7 +28,8 @@ static struct operation
         { "mycp",mycp},
         { "myfile",myfile},
         { "math",math},
-        { "sed",sed}
+        { "sed",sed},
+	{ "ll",myls}
 };
 
 

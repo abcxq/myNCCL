@@ -1,0 +1,11 @@
+INCDIR=inc
+OBJDIR=obj
+
+#BIN=mycp/mycp
+
+$(OBJDIR)/myls.o:myls/myls.c inc/shell.h
+	gcc -Wall  -I$(INCDIR)  -c $< -o $@
+
+
+clean:
+	rm -f $(BINDIR)/* $(OBJDIR)/*

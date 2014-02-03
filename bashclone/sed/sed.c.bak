@@ -2,18 +2,15 @@
 
 int sed(int argc,char *argv[])
 {
-	int i = 0;
+	int i=0;
+	char *p;
 	char *bufp;
-	char *cmd,*regexp, *replace, *flags = NULL;
-	char flag;
+	char *argv1_div[5]; /* store sed arguments */
 	char buf[64];
  
-        cmd = strtok(argv[1],"/");
-	regexp = strtok(NULL,"/");
-	replace = strtok(NULL,"/");
-	flag = strtok(NULL,"/");
+        p = strtok(argv[1],"/");
 
-/*	while(p)
+	while(p)
         {
 		argv1_div[i] = p;
 		printf("%s\n",argv1_div[i]);
@@ -21,16 +18,15 @@ int sed(int argc,char *argv[])
 		i++;
 	}
 
-	argv1_div[i] = "0"; */
+	argv1_div[i] = "0";
 
 	fgets(buf,64,stdin);
 
 	bufp = buf;
-	p = strstr(buf, regexp);
+	p = strstr(buf, argv1_div[1]);
 
-	if( NULL == p)
-		printf("String %s not found \n",regexp);
-	else
+	i = 0;
+	if(p)
 	{
 		while ( *bufp )
 		{
@@ -73,5 +69,8 @@ int sed(int argc,char *argv[])
 			}	
 		}	
 	}
+	else
+		printf("String %s not found \n",argv1_div[1]);
+	
 	return 0;
 }
