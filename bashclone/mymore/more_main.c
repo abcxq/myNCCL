@@ -58,6 +58,12 @@ void view(int startpos)
 {
 	int endpos;
 	int i;
+	
+	if(startpos == -1)
+        {        //用户不需要显示更多内容了，要退出
+                 tcsetattr(STDIN_FILENO,TCSANOW,&ots);
+                 exit(0);
+        }
 
 	endpos = startpos + height -1;
 
@@ -71,6 +77,7 @@ void view(int startpos)
 	{
 		printf("%s",lineptr[i]);
 	}
+
 	printf("\033[7m--more--(%2.0f%%)\033[m",(double)readsize/filesize*100);
 	if(endpos == num_of_lines)
         { 
@@ -83,7 +90,7 @@ void view(int startpos)
 	
 }
 
-void do_more(FILE *fp) //model
+void do_more(FILE *fp) //model function
 {
 	int linesize=width;
 	char line[linesize];
@@ -105,19 +112,7 @@ void do_more(FILE *fp) //model
 	while(1)
 	{
 		view(startpos);
-		reply = ctl_more(); //从键盘获取用户输入的命令
-		if(reply == 0)
-		{        //用户不需要显示更多内容了，要退出
-            		tcsetattr(STDIN_FILENO,TCSANOW,&ots);
-              		exit(0);
-		}
-		else
-		{
-			startpos += reply;
-			if(startpos < 0)
-				startpos = 0;
-		}
-
+		startpos = ctl_more(startpos);
 		continue;
 			
 	}
@@ -125,7 +120,7 @@ void do_more(FILE *fp) //model
 
 }
 
-int ctl_more()
+int ctl_more(int startpos)
 {
 	int c;
 
@@ -133,22 +128,27 @@ int ctl_more()
 	{            //注意加括号，赋值操作符是右结合的。如果不加括号会把getchar()!=EOF的结果赋给c
         	if(c=='q')
 		{
-			return 0;
+			return -1;
 	        }
         	if(c==' '|| c == 'f')      //空格
 		{
-			return height;
+			return height+startpos;
 		}    
 		if(c=='\n'|| c == 'j')
 		{     //回车
-			return 1;
+			return startpos + 1;
 		}
 		if(c == 'k')
 		{
-			return -1;
+			return startpos - 1;
 		}
 		if(c == 'b')
-			return -1*height;
+		{
+			startpos -= height;
+			if(startpos < 0)
+				startpos = 0;
+			return startpos;
+		}
 	}
 	
 	return 0;
