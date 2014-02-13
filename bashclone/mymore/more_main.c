@@ -8,10 +8,14 @@
 #include<string.h>
 #include<termios.h>
 
+#define MAXLINES 5500  /* max lines of the file */
+char *lineptr[MAXLINES];  /* pointers to text lines */
+char *tmp;
 int width;      //终端屏幕宽度
 int height;     //终端屏幕高度
 int filesize;   //文件的大小
 int readsize;   //已经显示的内容长度
+int num_of_lines;     //the lines of the file
 struct termios ts,ots;     //终端属性
 
 void gettermsize(int *w,int *h)
@@ -38,83 +42,92 @@ void settermattr()
 	tcsetattr(STDIN_FILENO,TCSAFLUSH,&ts);    //设置终端的新属性。TCSAFLUSH表示输出队列空了以后才生效，生效之前的输出队列被flush
 }
 
+int comput_size( int pos)
+{
+	int i;
+	int sizeread =0;
 
-void do_more(FILE *fp)
+	for(i = 0;i<pos;i++)
+	{
+		sizeread += strlen(lineptr[i]);
+	}
+	return sizeread;
+}
+
+void view(int startpos)
+{
+	int endpos;
+	int i;
+
+	endpos = startpos + height -1;
+
+
+	if ( endpos > num_of_lines)
+		endpos = num_of_lines;
+
+	readsize = comput_size(endpos);
+
+	for (i = startpos;i<endpos;i++)
+	{
+		printf("%s",lineptr[i]);
+	}
+	printf("\033[7m--more--(%2.0f%%)\033[m",(double)readsize/filesize*100);
+	if(endpos == num_of_lines)
+        { 
+		tcsetattr(STDIN_FILENO,TCSANOW,&ots);        //TCSANOW表示修改立即生效
+//		perror("fputs error");
+		exit(0);
+	}
+				
+
+	
+}
+
+void do_more(FILE *fp) //model
 {
 	int linesize=width;
 	char line[linesize];
-	int num_of_lines = 0;     //记录本次读了多少行
 	int reply;      //记录see_more()的返回值
-	int tmp = 0;
+	char *tmp;
 	FILE *fp_tty;
-	int i = 0;
-	int sizeread[100]; //store the file size which have been read every screen
-
-	memset(sizeread,0,100);
+	int startpos = 0;
 	
-
+	num_of_lines = 0;
+	
 	while(fgets(line,linesize,fp))
-	{    //从文件中读取一行内容
-        	readsize += strlen(line);     //读出的内容长度
-        	if(num_of_lines == height)    //如果满屏了
-		{
-			i++; //the ith screen
-			sizeread[i] = readsize ; //store the total file size after ith screen 
-
-			reply = see_more(); //从键盘获取用户输入的命令
-			if(reply == 0)
-			{        //用户不需要显示更多内容了，要退出
-                		tcsetattr(STDIN_FILENO,TCSANOW,&ots);
-                		exit(0);
-			}
- 			if(reply == -1)
-			{
-				
-				fseek(fp,-1*strlen(line),SEEK_CUR);
-				readsize = readsize - strlen(line);
-				num_of_lines -= abs(reply);
-				continue;
-			}
-			if(reply == -height)
-			{
-				if ( i == 1) //the first screen
-				{
-					
-					fseek(fp,-1*sizeread[1],SEEK_CUR);
-					readsize = readsize - sizeread[1];
-					i--;
-					num_of_lines -= abs(reply);
-					continue;
-				}
-				else //
-				{
-					tmp = sizeread[i]-sizeread[i-2];
-					fseek(fp,-1*tmp,SEEK_CUR);
-					readsize = readsize - tmp;
-					i = i-2;
-					num_of_lines -= abs(reply);
-					continue;
-				}
-			}		
-				
-			num_of_lines -= abs(reply);
-	        }
-
-	        if(fputs(line,stdout)==EOF)
-		{ //把这行内容显示在用户屏幕上
-			tcsetattr(STDIN_FILENO,TCSANOW,&ots);        //TCSANOW表示修改立即生效
-			perror("fputs error");
-			exit(1);
-	        }
-
-	        num_of_lines++;
+	{   
+		tmp = (char *)malloc(strlen(line)*sizeof(char));
+                strcpy(tmp,line);
+                lineptr[num_of_lines] = tmp;
+                num_of_lines++;
 	}
+
+	while(1)
+	{
+		view(startpos);
+		reply = ctl_more(); //从键盘获取用户输入的命令
+		if(reply == 0)
+		{        //用户不需要显示更多内容了，要退出
+            		tcsetattr(STDIN_FILENO,TCSANOW,&ots);
+              		exit(0);
+		}
+		else
+		{
+			startpos += reply;
+			if(startpos < 0)
+				startpos = 0;
+		}
+
+		continue;
+			
+	}
+
+
 }
 
-int see_more()
+int ctl_more()
 {
 	int c;
-	printf("\033[7m--more--(%2.0f%%)\033[m",(double)readsize/filesize*100);
 
 	while((c=getc(stdin))!=EOF)
 	{            //注意加括号，赋值操作符是右结合的。如果不加括号会把getchar()!=EOF的结果赋给c
