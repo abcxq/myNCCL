@@ -123,11 +123,16 @@ int  main(void)
 	{
 		if (*inputc == '\n')
 		{
-			pop(&optr,&op);
-                        pop(&opnd,&op2);
-                        pop(&opnd,&op1);
-                        n = count(op1,op2,op);
-                        push(&opnd,n);
+			gettop(&optr,&top_item);
+			while(top_item != '#')
+			{
+				pop(&optr,&op);
+                        	pop(&opnd,&op2);
+                        	pop(&opnd,&op1);
+                        	n = count(op1,op2,op);
+                        	push(&opnd,n);
+				gettop(&optr,&top_item);
+			}
                         break;
 		}
 
