@@ -42,6 +42,7 @@ link insert(link t, unsigned char key)
 	if ( key > t->item)
 	{
 		t->r = insert(t->r,key);
+		//printf("t->r->item is %c",t->r->item);
 	}
 	if ( key == t->item)
 	{
@@ -58,19 +59,31 @@ link delete(link t, unsigned char key)
 }
 void print_tree(link t)
 {
-	if (t)
-	 {
-	//	printf("(");
-		printf("%c is %d times\n", t->item,t->count);
+	if (t) 
+	{
+		printf("(");
+		printf("%c,%d", t->item,t->count);
 		print_tree(t->l);
 		print_tree(t->r);
-//		printf(")");
+		printf(")");
 	} 
 	else
-	//	printf("()");
-		return;
+		printf("()");
 
 }
+
+void print_treexq(link t)
+{
+	if (t)
+	{
+		printf("%d", t->item);
+		print_treexq(t->l);
+		print_treexq(t->r);
+	}
+	else
+		printf(" ");
+}
+		
 
 
 int main(int argc,char *argv[])
@@ -80,8 +93,7 @@ int main(int argc,char *argv[])
 	FILE *fp;
 	link root = NULL;
 
-	char buf[256];
-	char *bufp;
+	char c;
 
 	if ( 2 != argc )
 	{
@@ -97,23 +109,19 @@ int main(int argc,char *argv[])
 		return 0;
 	}
 
-	while( NULL != fgets(buf,256,fp))
+	while( EOF != (c = fgetc(fp)))
 	{
-		
-		bufp = buf;
-		while( *bufp )
+		if ( c == ' ' || c == '\n' )
 		{
-			if( *bufp != ' ' || *bufp != '\n')
-			{	
-				root = insert(root,*bufp);
-				bufp++;
-				continue;
-			}
-			else
-				bufp++;
+			continue;
+		}
+		else
+		{
+			root = insert(root,c);
+			continue;
 		}
 	}
-//	printf("\t\\tree");
+	printf("The tree is ");
 
 	print_tree(root);
 		
