@@ -1,0 +1,4 @@
+080497f4 d _DYNAMIC
+080498c0 d _GLOBAL_OFFSET_TABLE_
+08048798 R _IO_stdin_used
+08048798         w _Jv_RegisterClasses

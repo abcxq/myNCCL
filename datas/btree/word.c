@@ -160,6 +160,8 @@ link serch_max(link t)
 	if(!t)
 		return NULL;
 
+	max = (link)malloc(sizeof(btree));
+	tmp = (link)malloc(sizeof(btree));
 	max = t; //pre order
 	tmp = serch_max(t->l);
 	if((tmp !=NULL) && (tmp->count > max->count))
@@ -213,7 +215,7 @@ int main(int argc,char *argv[])
 		}
 				
 	}
-	printf("\t\\tree");
+//	printf("\t\\tree");
 
 	while(root)
 	{
@@ -223,7 +225,7 @@ int main(int argc,char *argv[])
 
 	}
 
-	print_tree(root);
+//	print_tree(root);
 		
 	fclose(fp);	
 	return 0;
